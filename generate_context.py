@@ -1,10 +1,8 @@
 import os
-import requests
-from bs4 import BeautifulSoup
-import tiktoken
 
-# config
-url = 'https://www.centific.com/'
+import requests
+import tiktoken
+from bs4 import BeautifulSoup
 
 # Create a directory to store the text files
 if not os.path.exists("raw/"):
@@ -12,20 +10,28 @@ if not os.path.exists("raw/"):
 if not os.path.exists("text/"):
     os.mkdir("text/")
 
-# get text from website
-soup = BeautifulSoup(requests.get(url).text, "html.parser")
-text = soup.get_text()
-with open('raw/' + url[8:-1].replace("/", "_") + ".txt", "w", encoding="UTF-8") as f:
-    f.write(text)
+for filename in os.listdir('link'):
+    domain = filename[:-4]
+    with open('link/' + filename, 'r') as f:
+        if not os.path.exists(f'raw/{domain}'):
+            os.mkdir(f'raw/{domain}')
+        if not os.path.exists(f'text/{domain}'):
+            os.mkdir(f'text/{domain}')
+        
+        for line in f:
+            url = line[:-1]
+            # get text from website
+            soup = BeautifulSoup(requests.get(url).text, "html.parser")
+            text = soup.get_text()
+            with open(f'raw/{domain}/' + url[8:].replace("/", "_") + ".txt", "w", encoding="UTF-8") as f:
+                f.write(text)
 
-# clean up the text
-text = text.replace('\n', ' ')
-while '  ' in text:
-    text = text.replace('  ', ' ')
-with open('text/' + url[8:-1].replace("/", "_") + ".txt", "w", encoding="UTF-8") as f:
-    f.write(text)
+            # clean up the text
+            text = text.replace('\n', ' ')
+            while '  ' in text:
+                text = text.replace('  ', ' ')
+            with open(f'text/{domain}/' + url[8:].replace("/", "_") + ".txt", "w", encoding="UTF-8") as f:
+                f.write(text)
 
-# calculate token
-encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
-num_tokens = len(encoding.encode(text))
-print(num_tokens)
+
+

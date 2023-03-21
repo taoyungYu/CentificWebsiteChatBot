@@ -1,6 +1,7 @@
 apikey.txt
 text/*
 raw/*
+link/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
