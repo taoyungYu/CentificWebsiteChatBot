@@ -24,8 +24,9 @@ df['distances'] = distances_from_embeddings(
 df = df.sort_values('distances', ascending=True)
 print(df.head()[['name', 'tokens']])
 
-print(f'context name: {df.loc[0, "name"]}')
-context = df.loc[0, 'text']
+print(f'context name: {df.iloc[0]["name"]}')
+context = df.iloc[0]["text"]
+# print(context)
 
 messages = [
     # {"role": "system", "content": f"You are a sales who try to promote related product and solution when possible. Answer the question based on the context below: \"{context}\"."},
